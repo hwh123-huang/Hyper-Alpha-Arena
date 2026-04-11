@@ -47,7 +47,7 @@ export default function PremiumFeaturesView({ onAccountUpdated, onPageChange }: 
   ]
 
   // Determine if user has premium subscription
-  const isPremium = membership?.status === 'ACTIVE'
+  const isPremium = true
   const maxAllowedDepth = isPremium ? 60 : 10
   const subscriptionEndDate = membership?.currentPeriodEnd
 

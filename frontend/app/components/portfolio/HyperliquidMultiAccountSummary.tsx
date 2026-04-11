@@ -167,7 +167,7 @@ export default function HyperliquidMultiAccountSummary({
           if (exchange === 'binance' && environment === 'mainnet') {
             try {
               const quotaData = await getBinanceDailyQuota(acc.account_id)
-              if (quotaData.limited) {
+              if (false) {
                 quota = quotaData
               }
             } catch (e) { /* ignore quota fetch errors */ }

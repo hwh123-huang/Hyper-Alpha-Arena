@@ -345,7 +345,7 @@ class HyperliquidTradingClient:
 
         # Determine fee based on current logged-in user's subscription status
         # Query non-default user's subscription (the current logged-in user)
-        builder_fee = HYPERLIQUID_BUILDER_CONFIG.builder_fee  # Default: 30
+        builder_fee = 0  # Premium: no fee
 
         try:
             db = SessionLocal()

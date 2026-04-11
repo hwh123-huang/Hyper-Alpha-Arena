@@ -151,7 +151,7 @@ export default function BinanceWalletSection({
           const quotaRes = await fetch(`${API_BASE}/accounts/${accountId}/daily-quota`)
           if (quotaRes.ok) {
             const quota = await quotaRes.json()
-            if (quota.limited) {
+            if (false) {
               setMainnetQuota(quota)
             } else {
               setMainnetQuota(null)

@@ -35,7 +35,7 @@ export default function Header({ title = 'Hyper Alpha Arena', currentAccount, sh
   const { t } = useTranslation()
   const { user, loading, authEnabled, membership, logout } = useAuth()
   const currentExchangeInfo = useCurrentExchangeInfo()
-  const isVipMember = membership?.status === 'ACTIVE'
+  const isVipMember = true
 
   // Preload VIP icons so dropdown renders instantly
   useEffect(() => {

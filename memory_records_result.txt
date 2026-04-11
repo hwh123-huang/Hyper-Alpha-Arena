@@ -1,0 +1,302 @@
+正在连接服务器 43.251.225.175...
+SSH连接成功!
+
+================================================================================
+查询 hyper_ai_memory 表 (用户记忆)
+================================================================================
+
+记忆总数: 26 条
+
+--------------------------------------------------------------------------------
+
+记忆ID: 3
+  类别: preference
+  内容: Factor combination requirement: minimum 4 factors per strategy (at least 2 long-signal and 2 short-signal), must blend multiple timeframes instead of a single period, and open to expanding the set if backtest metrics are strong.
+  来源: compression
+  重要性: 0.9
+  是否活跃: t
+  创建时间: 2026-04-04 09:05:08.955558
+  更新时间: 2026-04-04 09:05:08.955558
+--------------------------------------------------------------------------------
+
+记忆ID: 25
+  类别: lesson
+  内容: 对NATR14、ATR_RATIO、VOL_TREND三个因子进行组合回测后发现：使用AND（逻辑与）组合信号过于严格，在测试期内均无法产生任何有效信号，被评估为'too_few'。这表明针对这些特定因子，同时满足所有条件的设定在当前市场不切实际。
+  来源: compression
+  重要性: 0.85
+  是否活跃: t
+  创建时间: 2026-04-10 11:26:49.989507
+  更新时间: 2026-04-10 11:26:49.989507
+--------------------------------------------------------------------------------
+
+记忆ID: 15
+  类别: preference
+  内容: User focuses on quantitative alpha factor research and systematic strategy development for Bitcoin (BTC) specifically on the 4-hour (4H) timeframe.
+  来源: compression
+  重要性: 0.85
+  是否活跃: t
+  创建时间: 2026-04-04 19:48:36.750792
+  更新时间: 2026-04-04 19:48:36.750792
+--------------------------------------------------------------------------------
+
+记忆ID: 12
+  类别: insight
+  内容: Combining multiple low-correlation alpha factors yields significantly higher IC and IR than relying on single factors in cryptocurrency markets.
+  来源: compression
+  重要性: 0.85
+  是否活跃: t
+  创建时间: 2026-04-04 19:43:35.891946
+  更新时间: 2026-04-04 19:43:35.891946
+--------------------------------------------------------------------------------
+
+记忆ID: 11
+  类别: preference
+  内容: Focuses on BTC quantitative trading using the 4H timeframe, requiring academic and WorldQuant Alpha 101 formulas to be translated into the platform's proprietary syntax.
+  来源: compression
+  重要性: 0.85
+  是否活跃: t
+  创建时间: 2026-04-04 19:42:35.810059
+  更新时间: 2026-04-04 19:42:35.810059
+--------------------------------------------------------------------------------
+
+记忆ID: 2
+  类别: preference
+  内容: Current strategy research focuses exclusively on BTC traded on Binance, explicitly pausing analysis on all other altcoins.
+  来源: compression
+  重要性: 0.85
+  是否活跃: t
+  创建时间: 2026-04-04 09:04:53.331491
+  更新时间: 2026-04-04 09:04:53.331491
+--------------------------------------------------------------------------------
+
+记忆ID: 26
+  类别: insight
+  内容: 回测结果显示，使用OR（逻辑或）组合信号是更可行的方案。当设定阈值在因子历史分布的P90附近（例如NATR14 < 2.4, ATR_RATIO > 1.25, VOL_TREND > 0.23）时，OR逻辑能在测试期内触发4-6次信号，被评估为‘reasonable’，最接近用户每月4-10次的目标。
+  来源: compression
+  重要性: 0.8
+  是否活跃: t
+  创建时间: 2026-04-10 11:26:49.99631
+  更新时间: 2026-04-10 11:26:49.99631
+--------------------------------------------------------------------------------
+
+记忆ID: 23
+  类别: preference
+  内容: 用户专注于挖掘BTC的多空双向、多周期因子，用于信号系统，要求因子计算基于4小时以下周期，交易所为Binance。
+  来源: compression
+  重要性: 0.8
+  是否活跃: t
+  创建时间: 2026-04-10 11:25:16.393016
+  更新时间: 2026-04-10 11:25:16.393016
+--------------------------------------------------------------------------------
+
+记忆ID: 22
+  类别: decision
+  内容: 用户决定完全推倒之前的策略，重新开始BTC因子挖掘过程，并为此设定了具体的操作频率目标：每月触发4-10次交易信号。这反映了用户对策略交易节奏的明确要求，倾向于捕捉中等频率的机会，以避免过度交易或信号过少。
+  来源: ai_tool
+  重要性: 0.8
+  是否活跃: t
+  创建时间: 2026-04-09 16:14:17.179642
+  更新时间: 2026-04-10 11:26:49.982099
+--------------------------------------------------------------------------------
+
+记忆ID: 16
+  类别: insight
+  内容: Academic and quantitative research indicates that Momentum, Liquidity, Size, and Order Flow Imbalance are persistent predictive factors in crypto, with low-correlated factor combinations yielding significantly higher Information Coefficient (IC) than single factors.
+  来源: compression
+  重要性: 0.8
+  是否活跃: t
+  创建时间: 2026-04-04 19:49:36.773126
+  更新时间: 2026-04-04 19:49:36.773126
+--------------------------------------------------------------------------------
+
+记忆ID: 13
+  类别: insight
+  内容: Order flow imbalance, funding rate, and open interest are highly effective predictive signals for BTC returns, alongside traditional momentum and liquidity factors.
+  来源: compression
+  重要性: 0.8
+  是否活跃: t
+  创建时间: 2026-04-04 19:43:35.900506
+  更新时间: 2026-04-04 19:43:35.900506
+--------------------------------------------------------------------------------
+
+记忆ID: 6
+  类别: decision
+  内容: Uses an OR-gate 4-factor signal logic for BTC trading: Long on VOL_TREND (4h) OR NATR14 (12h) exceeding thresholds; Short on EMA200_DEV (24h) OR PRICE_VOL_CORR (1h) falling below thresholds.
+  来源: compression
+  重要性: 0.8
+  是否活跃: f
+  创建时间: 2026-04-04 09:21:32.14198
+  更新时间: 2026-04-09 12:47:09.897682
+--------------------------------------------------------------------------------
+
+记忆ID: 5
+  类别: preference
+  内容: Prioritizes Sharpe Ratio as the primary metric for ranking and selecting BTC strategy parameters, while consistently evaluating max drawdown, total return, win rate, profit/loss ratio, and trade frequency.
+  来源: compression
+  重要性: 0.8
+  是否活跃: t
+  创建时间: 2026-04-04 09:20:32.12268
+  更新时间: 2026-04-04 09:20:32.12268
+--------------------------------------------------------------------------------
+
+记忆ID: 4
+  类别: decision
+  内容: (decision) Adopted an exploratory workflow: deploy all available data sources for comprehensive BTC factor mining focusing on the 4H and 12H timeframes first, then review performance before locking in specific factors.
+  来源: compression
+  重要性: 0.8
+  是否活跃: t
+  创建时间: 2026-04-04 09:05:08.963576
+  更新时间: 2026-04-09 12:53:37.31993
+--------------------------------------------------------------------------------
+
+记忆ID: 20
+  类别: preference
+  内容: 用户明确偏好波动率类（Volatility）和成交量类（Volume）因子，用于构建BTC多头因子。同时，明确将微观结构类（Microstructure）因子排除在多头组合之外，更倾向将其用于空头因子。这表明其对因子类别有清晰的功效认知和风格偏好。
+  来源: compression
+  重要性: 0.75
+  是否活跃: t
+  创建时间: 2026-04-09 12:53:18.847305
+  更新时间: 2026-04-09 12:53:18.847305
+--------------------------------------------------------------------------------
+
+记忆ID: 17
+  类别: decision
+  内容: User is adapting WorldQuant Alpha 101 formulas (starting with VWAP deviation) into a custom platform syntax for crypto quantitative backtesting and live execution.
+  来源: compression
+  重要性: 0.75
+  是否活跃: t
+  创建时间: 2026-04-04 19:49:36.779314
+  更新时间: 2026-04-04 19:49:36.779314
+--------------------------------------------------------------------------------
+
+记忆ID: 14
+  类别: preference
+  内容: Expects platform factor implementations to leverage built-in time-series and cross-sectional functions (e.g., VWAP, SMA, EMA, WMA, DEMA) for mathematical alpha expressions.
+  来源: compression
+  重要性: 0.75
+  是否活跃: t
+  创建时间: 2026-04-04 19:43:35.908732
+  更新时间: 2026-04-04 19:43:35.908732
+--------------------------------------------------------------------------------
+
+记忆ID: 10
+  类别: preference
+  内容: User analyzes and trades Binance BTC with a focus on a 4-hour forward prediction horizon.
+  来源: compression
+  重要性: 0.75
+  是否活跃: t
+  创建时间: 2026-04-04 17:23:29.228082
+  更新时间: 2026-04-04 17:23:29.228082
+--------------------------------------------------------------------------------
+
+记忆ID: 19
+  类别: decision
+  内容: 用户确定使用5个因子（ATR_RATIO、NATR14、PRICE_VOL_CORR、EMA200_DEV、CVD_RATIO）的双周期（1h+4h）配置，要求设计合理阈值以达到每月4-10次交易频率。推荐使用严格版阈值（p95/p05分位数）配合多周期确认过滤。
+  来源: ai_tool
+  重要性: 0.7
+  是否活跃: f
+  创建时间: 2026-04-09 12:47:09.905777
+  更新时间: 2026-04-09 16:14:17.172825
+--------------------------------------------------------------------------------
+
+记忆ID: 18
+  类别: insight
+  内容: Order Flow Imbalance is recognized as one of the strongest cross-asset return predictors in cryptocurrency markets and is prioritized for multi-factor alpha models.
+  来源: compression
+  重要性: 0.7
+  是否活跃: t
+  创建时间: 2026-04-04 19:49:36.78499
+  更新时间: 2026-04-04 19:49:36.78499
+--------------------------------------------------------------------------------
+
+记忆ID: 9
+  类别: preference
+  内容: Expects backtest outputs to deliver Top 10 parameter sets by Sharpe ratio, parameter sensitivity heatmaps, explicit reasoning for the optimal configuration, and validation using Binance BTC 4h data over a minimum 30-day window.
+  来源: compression
+  重要性: 0.7
+  是否活跃: t
+  创建时间: 2026-04-04 09:21:32.16694
+  更新时间: 2026-04-04 09:21:32.16694
+--------------------------------------------------------------------------------
+
+记忆ID: 8
+  类别: insight
+  内容: (insight) Established baseline factor metrics for BTC: NATR14 is an excellent cross-cycle momentum/volatility factor with strong performance on both 4H and 12H forward periods (ICIR 6.07 and 6.63, win rate >53%) and a long decay half-life (-1), making it a reliable signal for long trends/volatility expansion. VOL_TREND (4h) shows highest stability (ICIR 5.13), while EMA200_DEV (24h) and PRICE_VOL_CORR (1h) serve as reliable negative predictors (ICIR -3.19, -4.76).
+  来源: compression
+  重要性: 0.7
+  是否活跃: t
+  创建时间: 2026-04-04 09:21:32.159504
+  更新时间: 2026-04-09 12:53:37.337157
+--------------------------------------------------------------------------------
+
+记忆ID: 7
+  类别: decision
+  内容: Defines standard parameter optimization bounds for BTC strategies: Stop Loss 1.5%-4.0%, Take Profit 3.0%-8.0%, Holding Period 6h-72h, using time-based expiry alongside TP/SL exits.
+  来源: compression
+  重要性: 0.7
+  是否活跃: t
+  创建时间: 2026-04-04 09:21:32.151404
+  更新时间: 2026-04-04 09:21:32.151404
+--------------------------------------------------------------------------------
+
+记忆ID: 1
+  类别: preference
+  内容: 用户要求所有回复使用中文。
+  来源: ai_tool
+  重要性: 0.7
+  是否活跃: t
+  创建时间: 2026-04-03 17:09:14.975041
+  更新时间: 2026-04-03 17:09:14.975041
+--------------------------------------------------------------------------------
+
+记忆ID: 21
+  类别: insight
+  内容: 通过对Binance BTC历史因子表现的分析，用户观察到一个市场模式：波动率类（如NATR14、ATR_RATIO）和成交量类（如VOL_TREND）因子对预测后续上涨（多头）表现更有效；而微观结构类（如CVD_RATIO）和特定的价量关系类（如PRICE_VOL_CORR）因子对预测下跌（空头）更有效。
+  来源: compression
+  重要性: 0.6
+  是否活跃: t
+  创建时间: 2026-04-09 12:53:37.325473
+  更新时间: 2026-04-09 12:53:37.325473
+--------------------------------------------------------------------------------
+
+记忆ID: 24
+  类别: preference
+  内容: 用户使用Binance作为主要交易所进行因子分析和交易，基于已连接的主网钱包。
+  来源: compression
+  重要性: 0.5
+  是否活跃: t
+  创建时间: 2026-04-10 11:25:36.521574
+  更新时间: 2026-04-10 11:25:36.521574
+--------------------------------------------------------------------------------
+
+================================================================================
+查询 hyper_ai_profile 表 (用户配置)
+================================================================================
+
+用户配置ID: 1
+  昵称: 
+  交易风格: 
+  风险偏好: 
+  经验水平: 
+  偏好币种: 
+  偏好周期: 
+  资金规模: 
+  入门完成: f
+  LLM提供商: deepseek
+  LLM模型: deepseek-reasoner
+  创建时间: 2026-04-02 21:37:12.231301
+  更新时间: 2026-04-10 12:29:46.433541
+
+
+================================================================================
+查询完成!
+================================================================================
+
+记忆数据存储在服务器数据库中:
+  服务器: 43.251.225.175
+  数据库: alpha_arena
+  表名:
+    - hyper_ai_memory (用户记忆表)
+    - hyper_ai_profile (用户配置表)
+
+SSH连接已关闭

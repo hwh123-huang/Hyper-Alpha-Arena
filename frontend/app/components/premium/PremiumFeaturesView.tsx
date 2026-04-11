@@ -46,9 +46,9 @@ export default function PremiumFeaturesView({ onAccountUpdated, onPageChange }: 
     { name: 'ATR14', description: 'Average True Range for volatility measurement', category: 'Volatility' },
   ]
 
-  // All users are premium - no subscription limits
-  const isPremium = true
-  const maxAllowedDepth = 60
+  // Determine if user has premium subscription
+  const isPremium = membership?.status === 'ACTIVE'
+  const maxAllowedDepth = isPremium ? 60 : 10
   const subscriptionEndDate = membership?.currentPeriodEnd
 
   useEffect(() => {
@@ -96,7 +96,18 @@ export default function PremiumFeaturesView({ onAccountUpdated, onPageChange }: 
 
   const handleSaveConfiguration = async (section: string) => {
     if (section === 'sampling-pool') {
-      // All users can save configuration - no login required
+      // Check if user is logged in
+      if (!user) {
+        toast.error('Please log in to save configuration')
+        // Could add login redirect logic here
+        return
+      }
+
+      // Check premium requirement - show modal instead of direct redirect
+      if (samplingDepth > 10 && !isPremium) {
+        setShowPremiumModal(true)
+        return
+      }
 
       setIsSaving(true)
       try {

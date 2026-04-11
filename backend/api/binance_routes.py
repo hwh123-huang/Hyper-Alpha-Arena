@@ -56,8 +56,15 @@ def _clear_client_cache(account_id: int = None, environment: str = None):
 
 def _is_premium_user(db: Session) -> bool:
     """Check if there is a premium member currently logged in"""
-    # All users are premium - no subscription limits
-    return True
+    try:
+        subscription = db.query(UserSubscription).join(User).filter(
+            User.username != 'default',
+            UserSubscription.subscription_type == 'premium'
+        ).first()
+        return subscription is not None
+    except Exception as e:
+        logger.warning(f"Failed to check premium status: {e}")
+        return False
 
 
 # Daily quota uses centralized config

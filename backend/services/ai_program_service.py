@@ -21,7 +21,7 @@ from database.models import (
     AiProgramConversation, AiProgramMessage, TradingProgram, Account,
     BacktestResult, BacktestTriggerLog, AccountProgramBinding
 )
-from services.ai_decision_service import build_chat_completion_endpoints, detect_api_format, _extract_text_from_message, get_max_tokens, build_llm_payload, build_llm_headers, extract_reasoning, convert_tools_to_anthropic, convert_messages_to_anthropic, strip_thinking_tags, is_reasoning_model
+from services.ai_decision_service import build_chat_completion_endpoints, detect_api_format, _extract_text_from_message, get_max_tokens, build_llm_payload, build_llm_headers, extract_reasoning, convert_tools_to_anthropic, convert_messages_to_anthropic, strip_thinking_tags
 from services.ai_stream_service import format_sse_event
 from services.system_logger import system_logger
 from services.ai_shared_tools import (
@@ -845,7 +845,7 @@ FACTOR_QUERY_TOOL = {
 PROGRAM_TOOLS = PROGRAM_TOOLS + BACKTEST_ANALYSIS_TOOLS + SHARED_SIGNAL_TOOLS + [FACTOR_QUERY_TOOL]
 
 
-def _call_anthropic_streaming(endpoint: str, payload: dict, headers: dict, timeout: int = 600) -> dict:
+def _call_anthropic_streaming(endpoint: str, payload: dict, headers: dict, timeout: int = 180) -> dict:
     """
     Call Anthropic API with streaming to avoid Cloudflare timeout.
 
@@ -1951,7 +1951,7 @@ You are creating a new program. Start fresh and design the strategy based on use
                 yield format_sse_event("error", {"content": "Invalid API configuration"})
                 return
         # Use unified headers builder (see build_llm_headers in ai_decision_service)
-        headers = build_llm_headers(api_format, api_config["api_key"])
+        headers = build_llm_headers(api_format, api_config["api_key"], api_config["base_url"])
 
         # Tool calling loop
         max_rounds = 15
@@ -2025,7 +2025,6 @@ You are creating a new program. Start fresh and design the strategy based on use
                 response = None
                 resp_json = None
                 # Don't reset last_error here - preserve error from previous attempts
-                request_timeout = 600 if is_reasoning_model(api_config.get("model", "")) else 380
 
                 for endpoint in endpoints:
                     try:
@@ -2034,12 +2033,12 @@ You are creating a new program. Start fresh and design the strategy based on use
 
                         if api_format == 'anthropic':
                             # Use streaming for Anthropic to avoid Cloudflare timeout
-                            resp_json = _call_anthropic_streaming(endpoint, payload, headers, timeout=request_timeout)
+                            resp_json = _call_anthropic_streaming(endpoint, payload, headers, timeout=180)
                             logger.info(f"[AI Program {request_id}] Anthropic streaming response received")
                             break  # Success
                         else:
                             # OpenAI format - use regular request
-                            response = requests.post(endpoint, json=payload, headers=headers, timeout=request_timeout)
+                            response = requests.post(endpoint, json=payload, headers=headers, timeout=120)
                             last_status_code = response.status_code
                             last_response_text = response.text[:2000] if response.text else None
                             logger.info(f"[AI Program {request_id}] Response status: {response.status_code}")

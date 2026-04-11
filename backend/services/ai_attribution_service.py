@@ -23,7 +23,7 @@ from database.models import (
 )
 from database.snapshot_connection import SnapshotSessionLocal
 from database.snapshot_models import HyperliquidTrade
-from services.ai_decision_service import build_chat_completion_endpoints, detect_api_format, _extract_text_from_message, get_max_tokens, build_llm_payload, build_llm_headers, extract_reasoning, convert_tools_to_anthropic, convert_messages_to_anthropic, strip_thinking_tags, is_reasoning_model
+from services.ai_decision_service import build_chat_completion_endpoints, detect_api_format, _extract_text_from_message, get_max_tokens, build_llm_payload, build_llm_headers, extract_reasoning, convert_tools_to_anthropic, convert_messages_to_anthropic, strip_thinking_tags
 
 logger = logging.getLogger(__name__)
 
@@ -889,7 +889,7 @@ def generate_attribution_analysis_stream(
             return
 
         # Use unified headers builder (see build_llm_headers in ai_decision_service)
-        headers = build_llm_headers(api_format, api_config["api_key"])
+        headers = build_llm_headers(api_format, api_config["api_key"], api_config["base_url"])
 
         # Function calling loop
         max_rounds = 15
@@ -933,11 +933,10 @@ def generate_attribution_analysis_stream(
             last_error = None
             last_status_code = None
             last_response_text = None
-            request_timeout = 600 if is_reasoning_model(api_config.get("model", "")) else 380
 
             for endpoint in endpoints:
                 try:
-                    response = requests.post(endpoint, json=request_payload, headers=headers, timeout=request_timeout)
+                    response = requests.post(endpoint, json=request_payload, headers=headers, timeout=120)
                     last_status_code = response.status_code
                     last_response_text = response.text[:2000] if response.text else None
                     if response.status_code == 200:
@@ -1141,4 +1140,3 @@ def get_attribution_messages(db: Session, conversation_id: int, user_id: int = 1
         result.append(msg_dict)
 
     return result
-

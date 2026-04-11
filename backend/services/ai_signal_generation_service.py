@@ -16,8 +16,9 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 
 from database.models import AiSignalConversation, AiSignalMessage, Account
-from services.ai_decision_service import build_chat_completion_endpoints, detect_api_format, _extract_text_from_message, get_max_tokens, build_llm_payload, build_llm_headers, extract_reasoning, convert_tools_to_anthropic, convert_messages_to_anthropic, strip_thinking_tags, is_reasoning_model
+from services.ai_decision_service import build_chat_completion_endpoints, detect_api_format, _extract_text_from_message, get_max_tokens, build_llm_payload, build_llm_headers, extract_reasoning, convert_tools_to_anthropic, convert_messages_to_anthropic, strip_thinking_tags
 from services.signal_backtest_service import signal_backtest_service, TIMEFRAME_MS
+from services.exchanges.symbol_mapper import SymbolMapper
 from services.system_logger import system_logger
 
 logger = logging.getLogger(__name__)
@@ -401,7 +402,7 @@ def generate_signal_with_ai(
             return {"success": False, "error": "Invalid base_url configuration"}
 
         # Use unified headers builder (see build_llm_headers in ai_decision_service)
-        headers = build_llm_headers(api_format, account.api_key)
+        headers = build_llm_headers(api_format, account.api_key, account.base_url)
 
         # Function Calling loop (max 30 rounds, last round forces no tools)
         max_tool_rounds = 30
@@ -443,13 +444,12 @@ def generate_signal_with_ai(
             last_error = None
             last_status_code = None
             last_response_text = None
-            request_timeout = 600 if is_reasoning_model(account.model) else 380
 
             for endpoint in endpoints:
                 try:
                     logger.info(f"[AI Signal Gen {request_id}] Trying endpoint: {endpoint}")
                     api_start = time.time()
-                    response = requests.post(endpoint, json=request_payload, headers=headers, timeout=request_timeout)
+                    response = requests.post(endpoint, json=request_payload, headers=headers, timeout=120)
                     api_elapsed = time.time() - api_start
                     last_status_code = response.status_code
                     last_response_text = response.text[:2000] if response.text else None
@@ -461,7 +461,7 @@ def generate_signal_with_ai(
                         last_error = f"HTTP {response.status_code}"
                         logger.warning(f"[AI Signal Gen {request_id}] Endpoint failed: {response.status_code} - {response.text[:500]}")
                 except requests.exceptions.Timeout as e:
-                    last_error = f"Timeout after {request_timeout}s: {str(e)}"
+                    last_error = f"Timeout after 120s: {str(e)}"
                     logger.warning(f"[AI Signal Gen {request_id}] Timeout on {endpoint}: {e}")
                 except requests.exceptions.ConnectionError as e:
                     last_error = f"Connection error: {str(e)}"
@@ -969,7 +969,7 @@ def _tool_get_kline_context(
             payload = {
                 "type": "candleSnapshot",
                 "req": {
-                    "coin": symbol.upper(),
+                    "coin": SymbolMapper.to_exchange(symbol.upper(), "hyperliquid"),
                     "interval": interval,
                     "startTime": min_ts,
                     "endTime": max_ts
@@ -1839,7 +1839,7 @@ def generate_signal_with_ai_stream(
             return
 
         # Use unified headers builder (see build_llm_headers in ai_decision_service)
-        headers = build_llm_headers(api_format, api_config["api_key"])
+        headers = build_llm_headers(api_format, api_config["api_key"], api_config["base_url"])
 
         yield _sse_event("status", {"message": "Analyzing your request..."})
 
@@ -1890,11 +1890,10 @@ def generate_signal_with_ai_stream(
             last_error = None
             last_status_code = None
             last_response_text = None
-            request_timeout = 600 if is_reasoning_model(api_config.get("model", "")) else 380
 
             for endpoint in endpoints:
                 try:
-                    response = requests.post(endpoint, json=request_payload, headers=headers, timeout=request_timeout)
+                    response = requests.post(endpoint, json=request_payload, headers=headers, timeout=120)
                     last_status_code = response.status_code
                     last_response_text = response.text[:2000] if response.text else None
                     if response.status_code == 200:

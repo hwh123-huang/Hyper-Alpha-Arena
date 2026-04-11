@@ -241,7 +241,7 @@ def test_llm_connection(
 
     try:
         # Use unified headers/payload builders (see build_llm_payload in ai_decision_service)
-        headers = build_llm_headers(api_format, api_key)
+        headers = build_llm_headers(api_format, api_key, url)
         payload = build_llm_payload(
             model=model,
             messages=[{"role": "user", "content": "Hi"}],
@@ -638,8 +638,6 @@ def stream_chat_response(
     api_key = llm_config["api_key"]
     api_format = llm_config.get("api_format", "openai")
 
-    request_timeout = 600 if is_reasoning_model(model) else 380
-
     # Build endpoints
     endpoints = build_chat_completion_endpoints(base_url, model)
     if not endpoints:
@@ -647,7 +645,7 @@ def stream_chat_response(
         return
 
     # Use unified headers builder (see build_llm_headers in ai_decision_service)
-    headers = build_llm_headers(api_format, api_key)
+    headers = build_llm_headers(api_format, api_key, base_url)
 
     # Create assistant message upfront with is_complete=False for interrupt recovery
     assistant_msg = HyperAiMessage(
@@ -707,7 +705,7 @@ def stream_chat_response(
                     try:
                         response = requests.post(
                             endpoint, headers=headers, json=body,
-                            timeout=request_timeout
+                            timeout=180  # Longer timeout for reasoning models
                         )
                         last_status_code = response.status_code
                         last_response_text = response.text[:2000] if response.text else None
@@ -1057,15 +1055,13 @@ def stream_onboarding_response(
     api_key = llm_config["api_key"]
     api_format = llm_config.get("api_format", "openai")
 
-    request_timeout = 600 if is_reasoning_model(model) else 380
-
     endpoints = build_chat_completion_endpoints(base_url, model)
     if not endpoints:
         yield format_sse_event("error", {"message": "Invalid API endpoint"})
         return
 
     # Use unified headers/payload builders (see build_llm_payload in ai_decision_service)
-    headers = build_llm_headers(api_format, api_key)
+    headers = build_llm_headers(api_format, api_key, base_url)
 
     body = build_llm_payload(
         model=model,
@@ -1080,7 +1076,7 @@ def stream_onboarding_response(
             try:
                 response = requests.post(
                     endpoint, headers=headers, json=body,
-                    stream=True, timeout=request_timeout
+                    stream=True, timeout=120
                 )
                 if response.status_code == 200:
                     break
@@ -1215,14 +1211,12 @@ def stream_insight_response(
     api_key = llm_config["api_key"]
     api_format = llm_config.get("api_format", "openai")
 
-    request_timeout = 600 if is_reasoning_model(model) else 380
-
     endpoints = build_chat_completion_endpoints(base_url, model)
     if not endpoints:
         yield format_sse_event("error", {"message": "Invalid API endpoint"})
         return
 
-    headers = build_llm_headers(api_format, api_key)
+    headers = build_llm_headers(api_format, api_key, base_url)
     messages = _build_insight_messages(lang or "en", context, selected_event)
     body = build_llm_payload(
         model=model,
@@ -1245,7 +1239,7 @@ def stream_insight_response(
                     headers=headers,
                     json=body,
                     stream=True,
-                    timeout=request_timeout,
+                    timeout=180,
                 )
                 last_status_code = response.status_code
                 last_response_text = response.text[:2000] if response.text else None
@@ -1718,7 +1712,7 @@ def generate_suggested_questions(db: Session) -> List[str]:
         else:
             endpoint = endpoints[0] if endpoints else f"{base_url.rstrip('/')}/chat/completions"
 
-        headers = build_llm_headers(api_format, api_key)
+        headers = build_llm_headers(api_format, api_key, endpoint)
         body = build_llm_payload(
             model=model,
             messages=[{"role": "user", "content": prompt}],

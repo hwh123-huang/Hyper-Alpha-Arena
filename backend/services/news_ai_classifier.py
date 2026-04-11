@@ -24,8 +24,7 @@ logger = logging.getLogger(__name__)
 # Max articles per batch to avoid token limits
 BATCH_SIZE = 30
 # Request timeout for LLM API
-LLM_TIMEOUT_REASONING = 600
-LLM_TIMEOUT_NORMAL = 380
+LLM_TIMEOUT = 120
 
 CLASSIFICATION_PROMPT = """You are a financial news analyst. Classify each article below.
 
@@ -124,10 +123,10 @@ def _call_llm(config: Dict, prompt: str) -> Optional[str]:
     """Call user's LLM and return raw response text."""
     from services.ai_decision_service import (
         build_llm_headers, build_llm_payload,
-        build_chat_completion_endpoints, is_reasoning_model,
+        build_chat_completion_endpoints,
     )
 
-    headers = build_llm_headers(config["api_format"], config["api_key"])
+    headers = build_llm_headers(config["api_format"], config["api_key"], config["base_url"])
     payload = build_llm_payload(
         model=config["model"],
         messages=[{"role": "user", "content": prompt}],
@@ -144,10 +143,9 @@ def _call_llm(config: Dict, prompt: str) -> Optional[str]:
 
     for endpoint in endpoints:
         try:
-            llm_timeout = LLM_TIMEOUT_REASONING if is_reasoning_model(config.get("model", "")) else LLM_TIMEOUT_NORMAL
             resp = http_requests.post(
                 endpoint, headers=headers, json=payload,
-                timeout=llm_timeout, verify=False,
+                timeout=LLM_TIMEOUT, verify=False,
             )
             if resp.status_code == 200:
                 data = resp.json()

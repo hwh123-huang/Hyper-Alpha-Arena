@@ -582,7 +582,7 @@ def generate_summary(
     prompt = COMPRESSION_PROMPT.format(conversation=conversation_text[:30000])
 
     try:
-        from services.ai_decision_service import build_chat_completion_endpoints, build_llm_payload, build_llm_headers, is_reasoning_model
+        from services.ai_decision_service import build_chat_completion_endpoints, build_llm_payload, build_llm_headers
 
         if api_format == "anthropic":
             endpoints = build_chat_completion_endpoints(base_url, model)
@@ -592,7 +592,7 @@ def generate_summary(
             endpoint = endpoints[0] if endpoints else f"{base_url}/chat/completions"
 
         # Use unified headers/payload builders (see build_llm_payload in ai_decision_service)
-        headers = build_llm_headers(api_format, api_key)
+        headers = build_llm_headers(api_format, api_key, base_url)
         body = build_llm_payload(
             model=model,
             messages=[{"role": "user", "content": prompt}],
@@ -600,7 +600,7 @@ def generate_summary(
             max_tokens=12000,
         )
 
-        response = requests.post(endpoint, headers=headers, json=body, timeout=600 if is_reasoning_model(model) else 380)
+        response = requests.post(endpoint, headers=headers, json=body, timeout=600)
 
         if response.status_code != 200:
             resp_snippet = response.text[:500] if response.text else "empty"

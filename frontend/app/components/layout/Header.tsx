@@ -35,8 +35,7 @@ export default function Header({ title = 'Hyper Alpha Arena', currentAccount, sh
   const { t } = useTranslation()
   const { user, loading, authEnabled, membership, logout } = useAuth()
   const currentExchangeInfo = useCurrentExchangeInfo()
-  // All users are premium - no subscription limits
-  const isVipMember = true
+  const isVipMember = membership?.status === 'ACTIVE'
 
   // Preload VIP icons so dropdown renders instantly
   useEffect(() => {
@@ -120,16 +119,25 @@ export default function Header({ title = 'Hyper Alpha Arena', currentAccount, sh
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
 
-                    {/* Membership Status - All users are VIP */}
-                    <DropdownMenuItem className="cursor-default">
-                      <img src="/static/vip_logo.png" alt="VIP" className="mr-2 h-4 w-4" />
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium text-yellow-600">{t('header.vipMember', 'VIP Member')}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {t('header.lifetimePlan', 'Lifetime Plan')}
-                        </span>
-                      </div>
-                    </DropdownMenuItem>
+                    {/* Membership Status */}
+                    {membership && membership.status === 'ACTIVE' ? (
+                      <DropdownMenuItem className="cursor-default">
+                        <img src="/static/vip_logo.png" alt="VIP" className="mr-2 h-4 w-4" />
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-yellow-600">{t('header.vipMember', 'VIP Member')}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {membership.planKey === 'yearly' ? t('header.yearlyPlan', 'Yearly Plan') : t('header.monthlyPlan', 'Monthly Plan')}
+                            {membership.currentPeriodEnd && ` • ${t('header.expires', 'Expires')} ${formatExpiryDate(membership.currentPeriodEnd)}`}
+                          </span>
+                        </div>
+                      </DropdownMenuItem>
+                    ) : (
+                      <DropdownMenuItem onClick={openPricingPage}>
+                        <img src="/static/vip_no.png" alt="Upgrade" className="mr-2 h-4 w-4" />
+                        <span>{t('header.upgradeToVip', 'Upgrade to VIP')}</span>
+                        <ExternalLink className="ml-auto h-3 w-3" />
+                      </DropdownMenuItem>
+                    )}
 
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => window.open('https://account.akooi.com/account', '_blank')}>

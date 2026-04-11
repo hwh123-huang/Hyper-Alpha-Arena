@@ -311,7 +311,7 @@ def _call_llm_for_dedup(
 
     try:
         from services.ai_decision_service import (
-            build_chat_completion_endpoints, build_llm_payload, build_llm_headers, is_reasoning_model
+            build_chat_completion_endpoints, build_llm_payload, build_llm_headers
         )
         endpoints = build_chat_completion_endpoints(base_url, model)
         if api_format == "anthropic":
@@ -319,7 +319,7 @@ def _call_llm_for_dedup(
         else:
             endpoint = endpoints[0] if endpoints else f"{base_url}/chat/completions"
 
-        headers = build_llm_headers(api_format, api_key)
+        headers = build_llm_headers(api_format, api_key, base_url)
         body = build_llm_payload(
             model=model,
             messages=[{"role": "user", "content": prompt}],
@@ -328,7 +328,7 @@ def _call_llm_for_dedup(
             temperature=None,
         )
 
-        response = requests.post(endpoint, headers=headers, json=body, timeout=600 if is_reasoning_model(model) else 380)
+        response = requests.post(endpoint, headers=headers, json=body, timeout=60)
 
         if response.status_code != 200:
             logger.warning(
@@ -463,7 +463,7 @@ def extract_memories_from_conversation(
         return []
 
     try:
-        from services.ai_decision_service import build_chat_completion_endpoints, build_llm_payload, build_llm_headers, is_reasoning_model
+        from services.ai_decision_service import build_chat_completion_endpoints, build_llm_payload, build_llm_headers
 
         endpoints = build_chat_completion_endpoints(base_url, model)
         if api_format == "anthropic":
@@ -472,7 +472,7 @@ def extract_memories_from_conversation(
             endpoint = endpoints[0] if endpoints else f"{base_url}/chat/completions"
 
         # Use unified headers/payload builders (see build_llm_payload in ai_decision_service)
-        headers = build_llm_headers(api_format, api_key)
+        headers = build_llm_headers(api_format, api_key, base_url)
         body = build_llm_payload(
             model=model,
             messages=[{"role": "user", "content": prompt}],
@@ -481,7 +481,7 @@ def extract_memories_from_conversation(
             temperature=None,
         )
 
-        response = requests.post(endpoint, headers=headers, json=body, timeout=600 if is_reasoning_model(model) else 380)
+        response = requests.post(endpoint, headers=headers, json=body, timeout=60)
 
         if response.status_code != 200:
             logger.warning(

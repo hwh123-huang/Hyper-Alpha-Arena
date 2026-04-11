@@ -27,7 +27,6 @@ from services.ai_decision_service import (
     convert_tools_to_anthropic,
     convert_messages_to_anthropic,
     strip_thinking_tags,
-    is_reasoning_model,
 )
 from services.ai_stream_service import format_sse_event
 from services.ai_shared_tools import (
@@ -805,7 +804,7 @@ def generate_prompt_with_ai_stream(
                 yield format_sse_event("error", {"content": "Invalid API configuration"})
                 return
         # Use unified headers builder (see build_llm_headers in ai_decision_service)
-        headers = build_llm_headers(api_format, api_config["api_key"])
+        headers = build_llm_headers(api_format, api_config["api_key"], api_config["base_url"])
 
         # Tool calling loop
         max_rounds = 10
@@ -861,12 +860,11 @@ def generate_prompt_with_ai_stream(
             for retry_attempt in range(API_MAX_RETRIES):
                 response = None
                 # Don't reset last_error - preserve error from previous attempts
-                request_timeout = 600 if is_reasoning_model(api_config.get("model", "")) else 380
 
                 for ep in endpoints:
                     try:
                         logger.info(f"[AI Prompt Gen {request_id}] Round {tool_round}, trying: {ep}")
-                        response = requests.post(ep, json=payload, headers=headers, timeout=request_timeout)
+                        response = requests.post(ep, json=payload, headers=headers, timeout=120)
                         last_status_code = response.status_code
                         last_response_text = response.text[:2000] if response.text else None
 

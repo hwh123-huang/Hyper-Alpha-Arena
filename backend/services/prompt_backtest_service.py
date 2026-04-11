@@ -300,7 +300,7 @@ def _call_llm_with_config(
         logger.error(f"No valid API endpoint for model {model}")
         return None
 
-    request_timeout = 600 if is_reasoning_model else 380
+    request_timeout = 240 if is_reasoning_model else 120
 
     for endpoint in endpoints:
         try:

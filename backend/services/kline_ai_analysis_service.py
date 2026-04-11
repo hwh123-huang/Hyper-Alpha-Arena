@@ -461,7 +461,7 @@ def analyze_kline_chart(
         max_retries = 3
         response = None
         success = False
-        request_timeout = 600 if is_reasoning_model(account.model) else 380
+        request_timeout = 600  # 10 minutes for all models (reasoning models can be very slow)
 
         logger.info(f"[K-line AI API] Starting AI API call: model={account.model}, timeout={request_timeout}s, "
                    f"endpoints={len(endpoints)}, max_retries={max_retries}")
